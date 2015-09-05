@@ -18,12 +18,28 @@
 
 #define kXHPhotoCollectionViewCellIdentifier @"XHPhotoCollectionViewCellIdentifier"
 
+@interface XHAlbumCollectionView : UICollectionView
+
+@end
+
+@implementation XHAlbumCollectionView
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    NSIndexPath *touchIndexPath = [self indexPathForItemAtPoint:point];
+    if (!touchIndexPath) {
+        return nil;
+    }
+    return [super hitTest:point withEvent:event];
+}
+
+@end
+
 @interface XHAlbumRichTextView () <UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic, strong) UILabel *userNameLabel;
 
-@property (nonatomic, strong) UICollectionView *sharePhotoCollectionView;
+@property (nonatomic, strong) XHAlbumCollectionView *sharePhotoCollectionView;
 
 @property (nonatomic, strong) UILabel *timestampLabel;
 @property (nonatomic, strong) UIButton *commentButton;
@@ -128,9 +144,9 @@
     return _richTextView;
 }
 
-- (UICollectionView *)sharePhotoCollectionView {
+- (XHAlbumCollectionView *)sharePhotoCollectionView {
     if (!_sharePhotoCollectionView) {
-        _sharePhotoCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[XHAlbumCollectionViewFlowLayout alloc] init]];
+        _sharePhotoCollectionView = [[XHAlbumCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[XHAlbumCollectionViewFlowLayout alloc] init]];
         _sharePhotoCollectionView.backgroundColor = self.richTextView.backgroundColor;
         [_sharePhotoCollectionView registerClass:[XHAlbumPhotoCollectionViewCell class] forCellWithReuseIdentifier:kXHPhotoCollectionViewCellIdentifier];
         [_sharePhotoCollectionView setScrollsToTop:NO];
